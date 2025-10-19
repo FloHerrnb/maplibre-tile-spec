@@ -7,6 +7,7 @@
 #include <mlt/util/packed_bitset.hpp>
 #include <mlt/util/buffer_stream.hpp>
 #include <mlt/util/raw.hpp>
+#include <mlt/decode/fsst/fsst.h>
 
 #include <string>
 #include <stdexcept>
@@ -69,7 +70,16 @@ public:
         }
 
         if (dictType == DictionaryType::FSST) {
-            throw std::runtime_error("FSST decoding not implemented");
+            // how is the fsst type aligned?
+            // find out if and how data types below (fsst dictionary) is encoded:
+            // fsst dictionary -> symbolTable, symbolLength, dictionary, length, present, data
+            // is fsst dictionary content inside the different streams below?
+
+            // inside the spec we find the following:
+            // An FSST dictionary-encoded nullable string column consists of the following streams in order
+            // Present, SymbolLength, SymbolTable, String Length, Dictionary
+            // the following question arises: does every column use its own symboltable?
+            decodeFsst(lengthStream, dataStream, offsetStream, views, numValues)
         } else if (dictType == DictionaryType::SINGLE) {
             decodeDictionary(lengthStream, dataStream, offsetStream, views, numValues);
             return {std::move(dataStream), std::move(views)};
@@ -121,6 +131,24 @@ private:
         for (std::uint32_t i = 0; i < numValues; ++i) {
             out.push_back(dictionary[offsets[i]]);
         }
+    }
+
+    decodeFSST( const std::vector<std::uint32_t>& lengthStream,
+                const std::vector<std::uint8_t>& utf8bytes,
+                const std::vector<std::uint32_t>& offsets,
+                      std::vector<std::string_view>& out,
+                      std::uint32_t numValues){
+        // fill fsst decoder with the corresponding symboltable data from the streams
+        fsst_decoder_t decoder;
+        // decoder.zeroTerminated = ;
+        // decoder.len =  ; 
+        // decoder.symbol = ;
+        // fsst_decompress(const fsst_decoder_t *decoder,  /* IN: use this symbol table for compression. */
+        // size_t lenIn,                                   /* IN: byte-length of compressed string. */
+        // const unsigned char *strIn,                     /* IN: compressed string. */
+        // size_t size,                                    /* IN: byte-length of output buffer. */
+        // unsigned char *output);
+        throw std::runtime_error("FSST decoding not implemented yet");
     }
 };
 

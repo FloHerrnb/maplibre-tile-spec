@@ -105,6 +105,7 @@ list(APPEND MLT_SRC_FILES
     ${PROJECT_SOURCE_DIR}/src/mlt/decode/int.cpp
     ${PROJECT_SOURCE_DIR}/src/mlt/decode/int.hpp
     ${PROJECT_SOURCE_DIR}/src/mlt/decode/property.hpp
+    ${PROJECT_SOURCE_DIR}/src/mlt/decode/fsst/fsst.h
     ${PROJECT_SOURCE_DIR}/src/mlt/decode/string.hpp
     ${PROJECT_SOURCE_DIR}/src/mlt/feature.cpp
     ${PROJECT_SOURCE_DIR}/src/mlt/geometry_vector.cpp
