@@ -133,7 +133,17 @@ private:
         }
     }
 
-    decodeFSST( const std::vector<std::uint32_t>& lengthStream,
+
+    // this function is used to decode a single byte via fsst and its symboltable
+    // maybe we can throw away the header as a whole and just decode it that way. Maybe we have to iterate here
+    static void decodeSingleByteviaFSST(uint8_t in[], uint8_t out[],
+                uint64_t sym[256], uint8_t len[256]){
+    uint8_t code = *in++;
+    *((uint64_t*)out) = sym[code];
+    out += len[code];
+    }
+
+    static void decodeFSST( const std::vector<std::uint32_t>& lengthStream,
                 const std::vector<std::uint8_t>& utf8bytes,
                 const std::vector<std::uint32_t>& offsets,
                       std::vector<std::string_view>& out,
@@ -141,8 +151,13 @@ private:
         // fill fsst decoder with the corresponding symboltable data from the streams
         fsst_decoder_t decoder;
         // decoder.zeroTerminated = ;
+        // do we use zeroterminated strings for encoding?
+        
+        // fill in the arrays for the symbol table
         // decoder.len =  ; 
         // decoder.symbol = ;
+
+        // afterwards we are able to decompress fsst
         // fsst_decompress(const fsst_decoder_t *decoder,  /* IN: use this symbol table for compression. */
         // size_t lenIn,                                   /* IN: byte-length of compressed string. */
         // const unsigned char *strIn,                     /* IN: compressed string. */
