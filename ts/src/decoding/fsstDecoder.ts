@@ -8,9 +8,8 @@
  */
 //TODO: improve -> quick and dirty implementation
 export function decodeFsst(symbols: Uint8Array, symbolLengths: Uint32Array, compressedData: Uint8Array): Uint8Array {
-    //TODO: use typed array directly
-    const decodedData: number[] = [];
-    const symbolOffsets: number[] = new Array(symbolLengths.length).fill(0);
+    const decodedData= new Uint8Array(8 * compressedData.length);
+    const symbolOffsets: number[] = new Array(symbolLengths.length);
 
     for (let i = 1; i < symbolLengths.length; i++) {
         symbolOffsets[i] = symbolOffsets[i - 1] + symbolLengths[i - 1];
@@ -27,5 +26,5 @@ export function decodeFsst(symbols: Uint8Array, symbolLengths: Uint32Array, comp
             }
         }
     }
-    return new Uint8Array(decodedData);
+    return decodedData;
 }
