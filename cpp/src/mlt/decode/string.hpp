@@ -133,7 +133,6 @@ private:
         }
     }
 
-
     // this function is used to decode a single byte via fsst and its symboltable
     // maybe we can throw away the header as a whole and just decode it that way. Maybe we have to iterate here
     static void decodeSingleByteviaFSST(uint8_t in[], uint8_t out[],
